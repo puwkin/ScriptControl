@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+
+######
+## Code taken from: https://blog.skyred.fi/articles/better-crossdomain-snippet-for-flask.html
+######
+
 from datetime import timedelta
 from flask import make_response, request, current_app
 from functools import update_wrapper
