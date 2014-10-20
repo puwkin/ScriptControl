@@ -17,6 +17,7 @@ class Script:
         self._thread = None
         self._running = False
         self._uptime = 0
+        self._last_run = None
         self.trigger_type = None
         #import class from correct module
         module = importlib.import_module('scripts.'+self._name)
@@ -28,6 +29,7 @@ class Script:
         while self._enabled:
             self._hist.save(self._name, "Running")
             self._running = True
+            self._last_run = self._get_timestamp()
             self._script.run()
             self._running = False
             if self._script.trigger == 'interval':
@@ -68,7 +70,7 @@ class Script:
         else:
             pass
 
-    def _set_uptime(self):
+    def _get_timestamp(self):
         return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def set_trigger_setting(self, setting, value):
@@ -93,7 +95,7 @@ class Script:
 
     def set_enabled(self):
         """
-        Enable Script
+        Enable Script, and if interval then start
         """
         if self.is_enabled():
             return "Script is already enabled"
@@ -111,7 +113,7 @@ class Script:
             return output
 
         self._enabled = True
-        self._uptime = self._set_uptime()
+        self._uptime = self._get_timestamp()
         if self.trigger_type == 'interval':
             self._thread = threading.Thread(target=self._exec)
             self._thread.start()
@@ -143,6 +145,9 @@ class Script:
 
     def get_uptime(self):
         return self._uptime
+
+    def get_last_run(self):
+        return self._last_run
 
     def get_output_all(self):
         """
