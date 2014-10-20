@@ -44,7 +44,7 @@ def script_run(script_name):
     Adds script to the scriptList and creates an object
     """
     output, return_val = script_list[script_name].run()
-
+    log_.warning('Run ('+script_name+'): '+str(return_val)+' - '+output)
     return flask.jsonify({'output': output, 'return': return_val})
 
 
@@ -56,7 +56,7 @@ def script_enable(script_name):
     Enables script if configured
     """
     output, return_val = script_list[script_name].set_enabled()
-
+    log_.warning('Enable ('+script_name+'): '+str(return_val)+' - '+output)
     return flask.jsonify({'output': output, 'return': return_val})
 
 
@@ -68,7 +68,7 @@ def script_disable(script_name):
     Disables script
     """
     output, return_val = script_list[script_name].set_disabled()
-
+    log_.warning('Disable ('+script_name+'): '+str(return_val)+' - '+output)
     return flask.jsonify({'output': output, 'return': return_val})
 
 
@@ -80,7 +80,7 @@ def script_set_trigger(script_name, setting, value):
     Set script trigger settings
     """
     output, return_val = script_list[script_name].set_trigger_setting(setting, value)
-
+    log_.warning('Set Trigger ('+script_name+'): '+str(return_val)+' - '+output)
     return flask.jsonify({'output': output, 'return': return_val})
 
 
@@ -102,8 +102,8 @@ def get_output_history(script_name, amount, limit=1):
     else:
         output = "Invalid call"
         return_val = False
-        log_.warning("func: getOutput("+script_name+", "+amount+")\\n\\t"+output)
 
+    log_.warning('Output History ('+script_name+'): '+str(return_val)+' - '+output)
     return flask.jsonify({'output': output, 'return': return_val})
 
 
@@ -115,7 +115,7 @@ def get_output_live(script_name):
     Get the live output
     """
     output, return_val = script_list[script_name].get_output()
-
+    log_.warning('Output Live ('+script_name+'): '+str(return_val)+' - '+output)
     return flask.jsonify({'output': output, 'return': return_val})
 
 
@@ -137,5 +137,5 @@ if __name__ == '__main__':
     script_list = {}
     add_scripts()
 
-    log_.info("Main script started")
+    log_.error("Main script started")
     app.run(debug=True)
