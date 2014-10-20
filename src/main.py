@@ -26,6 +26,7 @@ def get_script_list():
         list_all_info = {
             'name': key,
             'uptime': script_list[key].get_uptime(),
+            'last_run': script_list[key].get_last_run(),
             'running': script_list[key].is_running(),
             'enabled': script_list[key].is_enabled(),
             'trigger': script_list[key].get_trigger_type(),

@@ -56,3 +56,17 @@ class History:
                     (script_name, limit,))
         data = all_rows = cur.fetchall()
         return data
+
+    def get_last_run(self, script_name):
+        """
+        Return last run time from the .history file
+        """
+        db = sqlite3.connect(self._db_name)
+        cur = db.cursor()
+        cur.execute('SELECT timestamp FROM history WHERE script=? ORDER BY timestamp DESC LIMIT 1',
+                    (script_name,))
+        data = all_rows = cur.fetchall()
+        if data:
+            return data[0][0]
+        else:
+            return 'Never'

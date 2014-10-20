@@ -17,7 +17,6 @@ class Script:
         self._thread = None
         self._running = False
         self._uptime = 0
-        self._last_run = None
         self.trigger_type = None
         #import class from correct module
         module = importlib.import_module('scripts.'+self._name)
@@ -147,7 +146,7 @@ class Script:
         return self._uptime
 
     def get_last_run(self):
-        return self._last_run
+        return self._hist.get_last_run(self._name)
 
     def get_output_all(self):
         """
