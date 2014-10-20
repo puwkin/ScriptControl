@@ -20,7 +20,6 @@ def get_script_list():
     DONE
     Return a list of the scripts
     """
-
     #List all unused scripts that are in the ./scripts/ dir
     list_all = []
     for key in script_list:
@@ -46,9 +45,9 @@ def script_run(script_name):
     """
     #TODO return text and valid from Script
     output = script_list[script_name].run()
-    return_val = output[0]
+    return_val = output[1]
 
-    return flask.jsonify({'output': output[1], 'return': return_val})
+    return flask.jsonify({'output': output[0], 'return': return_val})
 
 
 @app.route('/script/<script_name>/add', methods=['GET'])

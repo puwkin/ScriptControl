@@ -112,6 +112,10 @@ class Script:
 
         self._enabled = True
         self._uptime = self._set_uptime()
+        if self.trigger_type == 'interval':
+            self._thread = threading.Thread(target=self._exec)
+            self._thread.start()
+
         return "script is enabled"
 
     def set_disabled(self):
