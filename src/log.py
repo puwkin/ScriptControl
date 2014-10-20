@@ -1,6 +1,8 @@
 
 from datetime import datetime
 import sqlite3
+import os
+
 
 class Log:
     def __init__(self, dbName):
@@ -9,19 +11,16 @@ class Log:
             - Check if table exists, if not then create it
         """
         self._db_name = dbName
-        #self._create_table()
-
-    def _create_table(self):
-        db = sqlite3.connect(self._db_name)
-        cur = db.cursor()
-        cur.execute('''
-            CREATE TABLE log(
-              id INTEGER PRIMARY KEY,
-              timestamp TEXT,
-              type TEXT,
-              message TEXT)
-        ''')
-        db.commit()
+        if not os.path.exists(self._db_name):
+            #create new DB, create table stocks
+            db = sqlite3.connect(self._db_name)
+            cur = db.cursor()
+            cur.execute('''CREATE TABLE log(
+                id INTEGER PRIMARY KEY,
+                timestamp TEXT,
+                type TEXT,
+                message TEXT)''')
+            db.commit()
 
     def get_timestamp(self):
         """returns a current timestamp"""

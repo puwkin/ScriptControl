@@ -1,5 +1,7 @@
 import datetime
 import sqlite3
+import os
+
 
 class History:
     def __init__(self, db_name):
@@ -8,19 +10,16 @@ class History:
             - Check if table exists, if not then create it
         """
         self._db_name = db_name
-        #self._create_table()
-
-    def _create_table(self):
-        db = sqlite3.connect(self._db_name)
-        cur = db.cursor()
-        cur.execute('''
-            CREATE TABLE history(
-              id INTEGER PRIMARY KEY,
-              timestamp TEXT,
-              script TEXT,
-              output TEXT)
-        ''')
-        db.commit()
+        if not os.path.exists(self._db_name):
+            #create new DB, create table stocks
+            db = sqlite3.connect(self._db_name)
+            cur = db.cursor()
+            cur.execute('''CREATE TABLE history(
+                id INTEGER PRIMARY KEY,
+                timestamp TEXT,
+                script TEXT,
+                output TEXT)''')
+            db.commit()
 
     def get_timestamp(self):
         """Returns current timestamp"""
