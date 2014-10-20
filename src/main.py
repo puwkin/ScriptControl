@@ -43,29 +43,7 @@ def script_run(script_name):
     DONE
     Adds script to the scriptList and creates an object
     """
-    #TODO return text and valid from Script
-    output = script_list[script_name].run()
-    return_val = output[1]
-
-    return flask.jsonify({'output': output[0], 'return': return_val})
-
-
-@app.route('/script/<script_name>/add', methods=['GET'])
-@crossdomain(origin='*')
-def script_add(script_name):
-    #TODO: REMOVE
-    """
-    NOT NEEDED
-    Adds script to the scriptList and creates an object
-    """
-
-    if script_name in script_list:
-        output = "Script has already been added"
-        return_val = False
-    else:
-        script_list[script_name] = script.Script(script_name)
-        output = "Script has been added"
-        return_val = True
+    output, return_val = script_list[script_name].run()
 
     return flask.jsonify({'output': output, 'return': return_val})
 
@@ -77,9 +55,7 @@ def script_enable(script_name):
     DONE
     Enables script if configured
     """
-    #TODO return text and valid from Script
-    output = script_list[script_name].set_enabled()
-    return_val = True
+    output, return_val = script_list[script_name].set_enabled()
 
     return flask.jsonify({'output': output, 'return': return_val})
 
@@ -91,9 +67,7 @@ def script_disable(script_name):
     DONE
     Disables script
     """
-    #TODO return text and valid from Script
-    output = script_list[script_name].set_disabled()
-    return_val = True
+    output, return_val = script_list[script_name].set_disabled()
 
     return flask.jsonify({'output': output, 'return': return_val})
 
@@ -105,9 +79,7 @@ def script_set_trigger(script_name, setting, value):
     DONE
     Set script trigger settings
     """
-    #TODO return text and valid from Script
-    output = script_list[script_name].set_trigger_setting(setting, value)
-    return_val = True
+    output, return_val = script_list[script_name].set_trigger_setting(setting, value)
 
     return flask.jsonify({'output': output, 'return': return_val})
 
@@ -142,8 +114,7 @@ def get_output_live(script_name):
     DONE
     Get the live output
     """
-    output = script_list[script_name].get_output()
-    return_val = True
+    output, return_val = script_list[script_name].get_output()
 
     return flask.jsonify({'output': output, 'return': return_val})
 

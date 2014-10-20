@@ -79,26 +79,20 @@ class Script:
         Settings cannot be changed when script is enabled
         """
         if self.is_enabled():
-            return "Cannot edit script with enabled, first disable and try again."
+            return ["Cannot edit script with enabled, first disable and try again.", False]
 
         if setting not in self.get_trigger_settings():
-            return "Script does not have setting: "+setting
+            return ["Script does not have setting: "+setting, False]
 
         self._trigger[setting] = value
-        return setting+" set to "+str(value)
-
-    def get_trigger_settings(self):
-        """
-        Returns the dict of trigger settings
-        """
-        return self._trigger
+        return [setting+" set to "+str(value), True]
 
     def set_enabled(self):
         """
         Enable Script, and if interval then start
         """
         if self.is_enabled():
-            return "Script is already enabled"
+            return ["Script is already enabled", False]
 
         enable_script = True
         output = ""
@@ -110,7 +104,7 @@ class Script:
 
         if not enable_script:
             output += "needs to be set"
-            return output
+            return [output, False]
 
         self._enabled = True
         self._uptime = self._get_timestamp()
@@ -118,18 +112,24 @@ class Script:
             self._thread = threading.Thread(target=self._exec)
             self._thread.start()
 
-        return "script is enabled"
+        return ["Script is enabled", True]
 
     def set_disabled(self):
         """
         Disable Script
         """
         if not self.is_enabled():
-            return "Script is already disabled"
+            return ["Script is already disabled", False]
 
         self._enabled = False
         self._uptime = 0
-        return "Script is disabled"
+        return ["Script is disabled", True]
+
+    def get_trigger_settings(self):
+        """
+        Returns the dict of trigger settings
+        """
+        return self._trigger
 
     def is_enabled(self):
         """
@@ -159,4 +159,4 @@ class Script:
         """
         Returns the most recent output of the script
         """
-        return self._script.get_output()[-1]
+        return [self._script.get_output()[-1], True]
