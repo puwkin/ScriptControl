@@ -27,11 +27,11 @@ class Script:
 
     def _exec(self):
         while self._enabled:
-            self._hist.save(self._name, "Running")
             self._running = True
             self._last_run = self._get_timestamp()
             self._script.run()
             self._running = False
+            self._hist.save(self._name, self.get_output_all())
             if self._script.trigger == 'interval':
                 time.sleep(self._trigger['interval'])
             else:
