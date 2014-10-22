@@ -11,7 +11,7 @@ class Long:
     def run(self):
         for i in range(0, 10):
             self._count = i
-            print i
+            print(i)
             self._output.append("Val: "+str(i))
             time.sleep(1)
         self._output.append("Done")
