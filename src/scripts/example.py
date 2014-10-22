@@ -37,5 +37,5 @@ class Example:
             time.sleep(1)
 
         self._output("I am done")
-        return
+
 
