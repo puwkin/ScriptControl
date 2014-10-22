@@ -128,7 +128,7 @@ def get_output_live(script_name):
     Get the live output
     """
     output, return_val = script_list[script_name].get_output()
-    log_.warning('Output Live ('+script_name+'): '+str(return_val)+' - '+output)
+    log_.warning('Output Live ('+script_name+'): '+str(return_val)+' - '+str(output))
     return flask.jsonify({'output': output, 'return': return_val})
 
 

@@ -15,18 +15,22 @@ class Script:
         self._trigger = {}
         self._enabled = False
         self._thread = None
+        self._running = False
         self._uptime = 0
         self.trigger_type = None
         #import class from correct module
         module = importlib.import_module('scripts.'+self._name)
-        c = getattr(module, self._name.title())
-        self._script = c()
+        self._c = getattr(module, self._name.title())
+        self._script = self._c()
         self._check_trigger()
 
     def _exec(self):
         while self._enabled:
+            self._running = True
             self._last_run = self._get_timestamp()
+            self._script = self._c()
             self._script.run()
+            self._running = False
             self._hist.save(self._name, self.get_output_all())
             if self._script.trigger == 'interval':
                 time.sleep(self._trigger['interval'])
@@ -55,6 +59,16 @@ class Script:
 
         return [output, return_val]
 
+    def stop(self):
+        """
+        Stops the script running in its place
+        """
+        try:
+            self._script.stop()
+            return ["Script 'stop' command sent", True]
+        except:
+            return ["Script cannot be stopped", False]
+
     def _check_trigger(self):
         """
         Get the type of trigger the script responds to
@@ -65,19 +79,11 @@ class Script:
         self.trigger_type = self._script.trigger
         if self.trigger_type == "interval":
             self._trigger['interval'] = None
-            self._trigger['rand'] = 4
         else:
             pass
 
     def _get_timestamp(self):
         return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    def stop(self):
-        """
-        Stop the current thread process
-        """
-        self._script.stop()
-        return ["Script stopped successfully",True]
 
     def set_trigger_setting(self, setting, value):
         """
@@ -143,10 +149,7 @@ class Script:
         return self._enabled
 
     def is_running(self):
-        try:
-            return self._thread.is_alive()
-        except:
-            return False
+        return self._running
 
     def get_trigger_type(self):
         return self.trigger_type
@@ -167,4 +170,4 @@ class Script:
         """
         Returns the most recent output of the script
         """
-        return [self._script.get_output()[-1], True]
+        return [self._script.get_output(), True]
