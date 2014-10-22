@@ -15,7 +15,6 @@ class Script:
         self._trigger = {}
         self._enabled = False
         self._thread = None
-        self._running = False
         self._uptime = 0
         self.trigger_type = None
         #import class from correct module
@@ -26,15 +25,17 @@ class Script:
 
     def _exec(self):
         while self._enabled:
-            self._running = True
             self._last_run = self._get_timestamp()
             self._script.run()
-            self._running = False
             self._hist.save(self._name, self.get_output_all())
             if self._script.trigger == 'interval':
                 time.sleep(self._trigger['interval'])
             else:
                 break
+
+    def _start_thread(self):
+        self._thread = threading.Thread(target=self._exec)
+        self._thread.start()
 
     def run(self):
         """
@@ -42,8 +43,7 @@ class Script:
         """
         if self.is_enabled():
             if self.trigger_type == 'call':
-                self._thread = threading.Thread(target=self._exec)
-                self._thread.start()
+                self._start_thread()
                 output = "Script is set to run"
                 return_val = True
             else:
@@ -71,6 +71,13 @@ class Script:
 
     def _get_timestamp(self):
         return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    def stop(self):
+        """
+        Stop the current thread process
+        """
+        self._script.stop()
+        return ["Script stopped successfully",True]
 
     def set_trigger_setting(self, setting, value):
         """
@@ -108,8 +115,7 @@ class Script:
         self._enabled = True
         self._uptime = self._get_timestamp()
         if self.trigger_type == 'interval':
-            self._thread = threading.Thread(target=self._exec)
-            self._thread.start()
+            self._start_thread()
 
         return ["Script is enabled", True]
 
@@ -137,7 +143,10 @@ class Script:
         return self._enabled
 
     def is_running(self):
-        return self._running
+        try:
+            return self._thread.is_alive()
+        except:
+            return False
 
     def get_trigger_type(self):
         return self.trigger_type

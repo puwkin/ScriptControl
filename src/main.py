@@ -73,6 +73,18 @@ def script_disable(script_name):
     return flask.jsonify({'output': output, 'return': return_val})
 
 
+@app.route('/script/<script_name>/stop', methods=['GET'])
+@crossdomain(origin='*')
+def script_stop(script_name):
+    """
+    DONE
+    Stops script
+    """
+    output, return_val = script_list[script_name].stop()
+    log_.warning('Disable ('+script_name+'): '+str(return_val)+' - '+output)
+    return flask.jsonify({'output': output, 'return': return_val})
+
+
 @app.route('/script/<script_name>/setting/<string:setting>/<int:value>', methods=['GET'])
 @crossdomain(origin='*')
 def script_set_trigger(script_name, setting, value):
