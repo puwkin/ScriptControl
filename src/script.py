@@ -16,7 +16,7 @@ class Script:
         self._enabled = False
         self._thread = None
         self._running = False
-        self._uptime = 0
+        self._start_time = None
         self.trigger_type = None
         #import class from correct module
         module = importlib.import_module('scripts.'+self._name)
@@ -123,6 +123,7 @@ class Script:
         if self.trigger_type == 'interval':
             self._start_thread()
 
+        self._start_time = datetime.datetime.now().replace(microsecond=0)
         return ["Script is enabled", True]
 
     def set_disabled(self):
@@ -133,7 +134,7 @@ class Script:
             return ["Script is already disabled", False]
 
         self._enabled = False
-        self._uptime = 0
+        self._start_time = None
         return ["Script is disabled", True]
 
     def get_trigger_settings(self):
@@ -155,7 +156,10 @@ class Script:
         return self.trigger_type
 
     def get_uptime(self):
-        return self._uptime
+        if self._start_time:
+            return str(datetime.datetime.now().replace(microsecond=0) - self._start_time)
+        else:
+            return str(0)
 
     def get_last_run(self):
         return self._hist.get_last_run(self._name)
