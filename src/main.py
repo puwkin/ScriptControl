@@ -115,7 +115,7 @@ def get_output_history(script_name, amount, limit=1):
     else:
         output = "Invalid call"
         return_val = False
-
+ 
     log_.warning('Output History ('+script_name+'): '+str(return_val)+' - '+output)
     return flask.jsonify({'output': output, 'return': return_val})
 
