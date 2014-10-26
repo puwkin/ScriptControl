@@ -1,26 +1,14 @@
 import time
+from .template import Template
 
-
-class Loop:
+class Loop(Template):
 
     def __init__(self):
-        self._outputData = []
-        self.trigger = 'call'
-        self._running = True
-
-    def stop(self):
-        self._running = False
-
-    def get_output(self):
-        return self._outputData
-
-    def _output(self, data):
-        self._outputData.append(data)
+        Template.__init__(self)
 
     def run(self):
         for i in range(0, 10):
             if not self._running: break #break out of loop if called to do so
-            print(i)
             self._output("Val: "+str(i))
             time.sleep(1)
 
