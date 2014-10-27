@@ -159,7 +159,7 @@ class Script:
         if self._start_time:
             return str(datetime.datetime.now().replace(microsecond=0) - self._start_time)
         else:
-            return str(0)
+            return '0:00:00'
 
     def get_last_run(self):
         return self._hist.get_last_run(self._name)
