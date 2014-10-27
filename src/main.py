@@ -137,7 +137,7 @@ def add_scripts():
         file_name = os.path.splitext(os.path.basename(each_file))
         if file_name[1] == ".py" \
                 and each_file != "__init__.py" \
-                and each_file != "example.py":
+                and each_file != "template.py":
             script_name = file_name[0]
             script_list[script_name] = script.Script(script_name)
 
@@ -151,4 +151,4 @@ if __name__ == '__main__':
     add_scripts()
 
     log_.error("Main script started")
-    app.run(debug=True)
+    app.run(port=5001, host='0.0.0.0', debug=True)
