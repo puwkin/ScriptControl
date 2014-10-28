@@ -152,7 +152,6 @@ def save_data():
         }
     with open('data.json', 'w') as outfile:
         json.dump(save_list, outfile)
-    print("save data")
     threading.Timer(5, save_data).start()
 
 def load_data():
@@ -161,7 +160,10 @@ def load_data():
     return data
 
 def add_scripts():
-    saved = load_data()
+    try:
+        saved = load_data()
+    except:
+        saved = {}
     for each_file in os.listdir("./scripts/"):
         file_name = os.path.splitext(os.path.basename(each_file))
         if file_name[1] == ".py" \
