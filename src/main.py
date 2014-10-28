@@ -37,6 +37,13 @@ def get_script_list():
     return flask.jsonify({'all': list_all, 'return': True})
 
 
+@app.route('/api/script/list/update', methods=['GET'])
+def update_script_list():
+    #rescan scripts dir
+    add_scripts()
+    return flask.jsonify({'output': 'List Updated', 'return': True})
+
+
 @app.route('/api/script/<script_name>/run', methods=['GET'])
 def script_run(script_name):
     """
@@ -132,7 +139,8 @@ def add_scripts():
                 and each_file != "__init__.py" \
                 and each_file != "template.py":
             script_name = file_name[0]
-            script_list[script_name] = script.Script(script_name)
+            if script_name not in script_list.keys():
+                script_list[script_name] = script.Script(script_name)
 
 if __name__ == '__main__':
     #set up general log file
@@ -144,4 +152,4 @@ if __name__ == '__main__':
     add_scripts()
 
     log_.error("Main script started")
-    app.run(port=5001, host='0.0.0.0', debug=True)
+    app.run(port=5001, host='0.0.0.0', debug=False)

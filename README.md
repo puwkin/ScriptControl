@@ -20,6 +20,10 @@ API
 Returns a list of scripts and their info
 
     /script/list
+    
+Rescans the scripts dir and adds new scripts to the list
+
+    /script/list/update
 
 All calls below will return a JSON object with:
 
