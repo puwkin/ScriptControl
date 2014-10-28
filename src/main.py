@@ -1,4 +1,5 @@
 import os
+import sys
 import flask
 from flask.ext.cors import CORS
 import json
@@ -14,6 +15,15 @@ cors = CORS(app, resources=r'/api/*', headers='Content-Type')
 @app.route('/')
 def index():
     return "Home Page"
+
+
+@app.route('/api/controller/restart', methods=['GET'])
+def restart_program():
+    """
+    Restarts the ScriptControl
+    """
+    python = sys.executable
+    os.execl(python, python, * sys.argv)
 
 
 @app.route('/api/script/list', methods=['GET'])
