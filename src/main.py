@@ -1,11 +1,12 @@
 import os
 import flask
+from flask.ext.cors import CORS
 import history
 import script
 import log
-from crossdomain import crossdomain
 
 app = flask.Flask(__name__)
+cors = CORS(app, resources=r'/api/*', headers='Content-Type')
 
 
 @app.route('/')
@@ -13,8 +14,7 @@ def index():
     return "Home Page"
 
 
-@app.route('/script/list', methods=['GET'])
-@crossdomain(origin='*')
+@app.route('/api/script/list', methods=['GET'])
 def get_script_list():
     """
     DONE
@@ -37,8 +37,7 @@ def get_script_list():
     return flask.jsonify({'all': list_all, 'return': True})
 
 
-@app.route('/script/<script_name>/run', methods=['GET'])
-@crossdomain(origin='*')
+@app.route('/api/script/<script_name>/run', methods=['GET'])
 def script_run(script_name):
     """
     DONE
@@ -49,8 +48,7 @@ def script_run(script_name):
     return flask.jsonify({'output': output, 'return': return_val})
 
 
-@app.route('/script/<script_name>/enable', methods=['GET'])
-@crossdomain(origin='*')
+@app.route('/api/script/<script_name>/enable', methods=['GET'])
 def script_enable(script_name):
     """
     DONE
@@ -61,8 +59,7 @@ def script_enable(script_name):
     return flask.jsonify({'output': output, 'return': return_val})
 
 
-@app.route('/script/<script_name>/disable', methods=['GET'])
-@crossdomain(origin='*')
+@app.route('/api/script/<script_name>/disable', methods=['GET'])
 def script_disable(script_name):
     """
     DONE
@@ -73,8 +70,7 @@ def script_disable(script_name):
     return flask.jsonify({'output': output, 'return': return_val})
 
 
-@app.route('/script/<script_name>/stop', methods=['GET'])
-@crossdomain(origin='*')
+@app.route('/api/script/<script_name>/stop', methods=['GET'])
 def script_stop(script_name):
     """
     DONE
@@ -85,8 +81,7 @@ def script_stop(script_name):
     return flask.jsonify({'output': output, 'return': return_val})
 
 
-@app.route('/script/<script_name>/setting/<string:setting>/<int:value>', methods=['GET'])
-@crossdomain(origin='*')
+@app.route('/api/script/<script_name>/setting/<string:setting>/<int:value>', methods=['GET'])
 def script_set_trigger(script_name, setting, value):
     """
     DONE
@@ -97,9 +92,8 @@ def script_set_trigger(script_name, setting, value):
     return flask.jsonify({'output': output, 'return': return_val})
 
 
-@app.route('/script/<script_name>/output/hist/<string:amount>', methods=['GET'])
-@app.route('/script/<script_name>/output/hist/<string:amount>/<int:limit>', methods=['GET'])
-@crossdomain(origin='*')
+@app.route('/api/script/<script_name>/output/hist/<string:amount>', methods=['GET'])
+@app.route('/api/script/<script_name>/output/hist/<string:amount>/<int:limit>', methods=['GET'])
 def get_output_history(script_name, amount, limit=1):
     """
     DONE
@@ -120,8 +114,7 @@ def get_output_history(script_name, amount, limit=1):
     return flask.jsonify({'output': output, 'return': return_val})
 
 
-@app.route('/script/<script_name>/output/live', methods=['GET'])
-@crossdomain(origin='*')
+@app.route('/api/script/<script_name>/output/live', methods=['GET'])
 def get_output_live(script_name):
     """
     DONE
