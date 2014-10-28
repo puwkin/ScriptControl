@@ -7,6 +7,7 @@ class Loop(Template):
         Template.__init__(self)
 
     def run(self):
+        #Your code here...
         for i in range(0, 10):
             if not self._running: break #break out of loop if called to do so
             self._output("Val: "+str(i))
