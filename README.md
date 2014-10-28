@@ -13,7 +13,8 @@ Dependencies
   * Python 3.x
   * sqlite3
   * Flask
-
+  * Flask-Cors
+  
 
 API
 ---
