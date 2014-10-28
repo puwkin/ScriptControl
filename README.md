@@ -25,6 +25,11 @@ Returns a list of scripts and their info
 Rescans the scripts dir and adds new scripts to the list
 
     /script/list/update
+    
+Restarts the main script controller
+
+    /controller/restart
+
 
 All calls below will return a JSON object with:
 
