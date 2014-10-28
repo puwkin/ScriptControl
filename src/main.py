@@ -1,6 +1,8 @@
 import os
 import flask
 from flask.ext.cors import CORS
+import json
+import threading
 import history
 import script
 import log
@@ -33,7 +35,6 @@ def get_script_list():
             'trigger_setting': script_list[key].get_trigger_settings()
         }
         list_all.append(list_all_info)
-
     return flask.jsonify({'all': list_all, 'return': True})
 
 
@@ -132,7 +133,35 @@ def get_output_live(script_name):
     return flask.jsonify({'output': output, 'return': return_val})
 
 
+@app.route('/api/script/<script_name>/next_run', methods=['GET'])
+def get_next_run(script_name):
+    output, return_val = script_list[script_name].get_next_run()
+    return flask.jsonify({'output': output, 'return': return_val})
+
+
+def save_data():
+    """
+    Saves data about the script_list every 5 seconds
+    """
+    save_list = {}
+    for key in script_list:
+        save_list[key] = {
+            'trigger_settings': script_list[key].get_trigger_settings(),
+            'enabled': script_list[key].is_enabled(),
+            'next_run': script_list[key].get_next_run()
+        }
+    with open('data.json', 'w') as outfile:
+        json.dump(save_list, outfile)
+    print("save data")
+    threading.Timer(5, save_data).start()
+
+def load_data():
+    with open('data.json') as data_file:
+        data = json.load(data_file)
+    return data
+
 def add_scripts():
+    saved = load_data()
     for each_file in os.listdir("./scripts/"):
         file_name = os.path.splitext(os.path.basename(each_file))
         if file_name[1] == ".py" \
@@ -141,6 +170,16 @@ def add_scripts():
             script_name = file_name[0]
             if script_name not in script_list.keys():
                 script_list[script_name] = script.Script(script_name)
+                if script_name in saved: #then read in old values
+                    #add back any settings
+                    if script_list[script_name].get_trigger_type() != 'call':
+                        saved_setting = saved[script_name]['trigger_settings']
+                        for setting in saved_setting:
+                            script_list[script_name].set_trigger_setting(setting, saved_setting[setting])
+                    #set to last enabled state
+                    if saved[script_name]['enabled']:
+                        script_list[script_name].set_enabled()
+
 
 if __name__ == '__main__':
     #set up general log file
@@ -150,6 +189,6 @@ if __name__ == '__main__':
     #dict to store scripts data
     script_list = {}
     add_scripts()
-
+    save_data()
     log_.error("Main script started")
     app.run(port=5001, host='0.0.0.0', debug=False)
