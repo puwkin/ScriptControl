@@ -13,6 +13,7 @@ class Script:
         self._hist = history.History('./scripts/_history.db')
         self._name = script_name
         self._trigger = {}
+        self._next_run = None
         self._enabled = False
         self._thread = None
         self._running = False
@@ -33,6 +34,7 @@ class Script:
             self._running = False
             self._hist.save(self._name, self.get_output_all())
             if self._script.trigger == 'interval':
+                self._next_run = int(time.time()+self._trigger['interval'])
                 time.sleep(self._trigger['interval'])
             else:
                 break
@@ -84,6 +86,18 @@ class Script:
 
     def _get_timestamp(self):
         return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    def get_next_run(self):
+        output = self._next_run
+        return_val = True
+        if self._script.trigger == 'call':
+            output = "Called scripts do not have a next run time"
+            return_val = False
+        elif not self._next_run:
+            output = "Script has not run yet"
+            return_val = False
+
+        return [output, return_val]
 
     def set_trigger_setting(self, setting, value):
         """
