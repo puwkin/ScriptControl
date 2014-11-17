@@ -6,11 +6,6 @@ The ScriptControl project is used to control multiple python scripts remotely. T
 
 Use this web interface to control this project: [Control-Interface](https://github.com/xtream1101/control-interface)
 
-BUG
----
-
-  * Setting interval only works in Google Chrome at the moment
-
 
 Dependencies
 ------------
